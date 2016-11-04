@@ -27,9 +27,12 @@ vue-cli
 ## 依赖
 1. vue-router
 2. vuex
+3. vue-resource
 3. z-vue-components
 4. less
 5. less-loader
+6. markdown-it
+7. highlight.js
 
 ## webpack配置
 
@@ -45,5 +48,3 @@ vue-cli
 ## 该记住的点
 
 网页被卷去的高： `document.documentElement.scrollTop || document.body.scrollTop`
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
