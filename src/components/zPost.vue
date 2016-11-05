@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getPost: function() {
-      this.$http.get('/static/api/post.json').then((response) => {
+      this.$http.get('static/api/post.json').then((response) => {
         // success callback
         let data = response.data.data
 
@@ -110,6 +110,19 @@ export default {
 
     p+p {
       margin: 20px 0;
+    }
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .post-view {
+    .entry {
+      margin-top: -18px;
+    }
+
+    header, .entry-content {
+      padding-left: 16px;
+      padding-right: 16px;
     }
   }
 }

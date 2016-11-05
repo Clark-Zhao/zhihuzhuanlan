@@ -281,4 +281,34 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 660px) {
+  .title {
+    margin-bottom: 12px;
+  }
+
+  .description {
+    width: auto;
+  }
+
+  .title, .description {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .items-container{
+    .block-title {
+      padding-left: 16px;
+
+      &:after {
+        left: 96px;
+      }
+    }
+  }
+
+  .item {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
 </style>

@@ -38,6 +38,14 @@ export default {
     font-family: -apple-system,"Helvetica Neue",Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
   }
 
+  .clearfix:before, .clearfix:after {
+    display: table-cell;
+    content: '';
+  }
+  .clearfix:after {
+    clear: both;
+  }
+
   .holdertext {
     color: #b3b3b3;
     pointer-events: none;
@@ -78,4 +86,12 @@ export default {
       }
     }
   }
+
+@media screen and (max-width: 660px) {
+  .main-container {
+    .receptacle {
+      width: auto;
+    }
+  }
+}
 </style>

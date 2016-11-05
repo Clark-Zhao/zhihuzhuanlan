@@ -10,7 +10,7 @@
             <z-imageinput
             :width=38
             :height=38
-            :src="'/static/images/avatar.jpg'"
+            :src="'static/images/avatar.jpg'"
             :alt="'作者头像'"
             :radius="'50%'"
             ></z-imageinput>
@@ -76,6 +76,8 @@ export default {
 </script>
 
 <style lang="less" scpoed>
+
+
 [class^=icon-], [class*=" icon-"] {
     font-size: 24px;
 }
@@ -223,6 +225,44 @@ export default {
 
   .navbar-fixed-show {
     top: 0;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  #header-holder {
+    .navbar {
+      .navbar-title-container {
+        left: 0;
+        margin-left: 0;
+        padding-left: 16px;
+        width: auto;
+        max-width: 62%;
+
+        .z-image-wraper {
+          display: none;
+        }
+
+        .functions {
+          display: none;
+        }
+
+        .titles {
+          width: e("calc(100% - 56px)");
+          margin-left: 56px;
+          position: relative;
+
+          &:before {
+            content: '';
+            height: 24px;
+            width: 1px;
+            background: rgba(0,0,0,.16);
+            position: absolute;
+            left: -16px;
+            top: 8px;
+          }
+        }
+      }
+    }
   }
 }
 </style>

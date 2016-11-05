@@ -73,7 +73,6 @@ export default {
       }
     },
     markdownIt: function() {
-      console.log(md.render(document.getElementById('js-entry-content').innerText))
       this.content = md.render(document.getElementById('js-entry-content').innerText)
     },
     uploadImage: function() {
@@ -204,6 +203,24 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .main.post-write {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .post-write {
+    min-width: initial;
+
+    .entry-content {
+      min-width: initial;
+      padding-left: initial;
+      padding-right: initial;
+      margin-left: initial;
+    }
   }
 }
 </style>
