@@ -8,7 +8,7 @@
             <z-imageinput
             :width=36
             :height=36
-            :src="'/static/images/avatar.jpg'"
+            :src="'static/images/avatar.jpg'"
             :alt="'作者头像'"
             :radius="'50%'"></z-imageinput>{{author.name}}
           </a>
