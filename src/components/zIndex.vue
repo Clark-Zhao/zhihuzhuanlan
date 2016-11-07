@@ -18,12 +18,14 @@
         :text="'关注专栏'"
         ></z-button>
 
-        <div class="more-funcs">
-          <span class="menu-button"></span>
-          <menu class="menu">
-
+        <!-- <div class="more-funcs">
+          <span class="menu-button">
+            <i class="icon iconfont icon-unfold"></i>
+          </span>
+          <menu class="menu navbar-menu">
+            <a class="menu-item">关于</a>
           </menu>
-        </div>
+        </div> -->
       </div>
 
       <div class="followers">
@@ -68,7 +70,7 @@
       </ul>
 
       <div class="posts-end">
-        <i class="icon-ic_column_end"></i>
+        <i class="icon iconfont icon-endstatus"></i>
       </div>
     </div>
     <!-- 文章列表结束 -->
@@ -149,6 +151,90 @@ export default {
     box-sizing: border-box;
     padding: 0;
   }
+
+  .more-funcs {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -16px 0 0 70px;
+
+    &:hover {
+      .menu-button {
+        transform: rotate(180deg);
+      }
+
+      .menu {
+        opacity: 1;
+      }
+    }
+
+    .menu-button {
+      display: block;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      border-radius: 50%;
+      border: 1px solid #b3b3b3;
+      background: #fff;
+      cursor: pointer;
+      -webkit-transition: transform .1s ease-out;
+      -moz-transition: transform .1s ease-out;
+      -o-transition: transform .1s ease-out;
+      transition: transform .1s ease-out;
+
+      i {
+        color: #b3b3b3;
+        top: 7px;
+      }
+    }
+
+    .menu {
+      opacity: 0;
+      width: 128px;
+      margin-top: 8px!important;
+      right: -20px;
+      position: absolute;
+      z-index: 30;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 4px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.05);
+      background-color: #fff;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-transition: opacity .5s ease-out;
+      -moz-transition: opacity .5s ease-out;
+      -o-transition: opacity .5s ease-out;
+      transition: opacity .5s ease-out;
+
+      .menu-item {
+        cursor: pointer;
+        padding: 0 16px;
+        display: block;
+        white-space: nowrap;
+        line-height: 54px;
+        color: #333;
+        border: 0;
+        background: 0 0;
+        text-align: left;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 14px;
+
+        &:hover {
+          background: #f7f8f9;
+        }
+      }
+    }
+
+    .navbar-menu {
+      left: auto!important;
+      margin-right: -26px;
+    }
+  }
 }
 
 .followers {
@@ -206,7 +292,7 @@ export default {
       background: rgba(0,0,0,.1);
     }
 
-    .icon-ic_column_end {
+    .icon-endstatus {
       color: rgba(0,0,0,.1);
       background: #fff;
       padding: 0 12px;

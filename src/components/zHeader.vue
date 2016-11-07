@@ -25,9 +25,14 @@
           <z-button :text="'关注专栏'"></z-button>
         </div>
       </div>
+      <div class="navbar-menu-container close">
+        <a class="menu-button">
+          <i class="icon iconfont icon-more"></i>
+        </a>
+      </div>
       <div class="navbar-write-container">
         <router-link to="/write">
-          <i></i>
+          <i class="icon iconfont icon-edit"></i>
           写文章
         </router-link>
       </div>
@@ -76,11 +81,6 @@ export default {
 </script>
 
 <style lang="less" scpoed>
-
-
-[class^=icon-], [class*=" icon-"] {
-    font-size: 24px;
-}
 
 #header-holder {
   height: 59px;
@@ -191,6 +191,20 @@ export default {
       transition: all .2s ease-out;
     }
 
+    .navbar-menu-container {
+      position: relative;
+      float: right;
+      padding: 0 16px 0 10px;
+
+      .menu-button {
+        color: gray;
+      }
+
+      a:hover {
+        color: #333;
+      }
+    }
+
     .navbar-write-container {
       position: relative;
       float: right;
@@ -204,9 +218,13 @@ export default {
         text-decoration: none;
         display: inline-block;
 
-        i {
-          margin-right: 3px;
+        &:hover {
+          color: #333;
         }
+
+        // i {
+        //   margin-right: 3px;
+        // }
       }
     }
   }

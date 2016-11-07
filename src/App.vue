@@ -58,9 +58,23 @@ export default {
 
   .icon {
     width: 1em; height: 1em;
-    vertical-align: -0.15em;
+    vertical-align: text-bottom;
     fill: currentColor;
     overflow: hidden;
+  }
+
+  [class^=icon-], [class*=" icon-"] {
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 24px;
+    position: relative;
+    top: 4px;
   }
 
   .main-container {

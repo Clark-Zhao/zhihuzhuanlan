@@ -2,25 +2,31 @@
   <div class="main post-write">
     <section class="receptacle">
       <div class="title-img">
-        <div class="upload-controls empty">
+        <div class="upload-controls" :class="{'empty': titleImg ==''}">
           <div class="preview-wrapper fileinput-button">
-            <img class="preview" />
-            <i class="upload-icon icon-ic_phot_camera_alt"></i>
-            <input type="file" accept=".jpeg, .jpg, .png" name="upload_file" id="js-title-img-input" @change="uploadImage">
+            <img v-show="titleImg != ''" class="preview" :src="titleImg"/>
+            <i v-show="titleImg == ''" class="icon iconfont icon-camera"></i>
+            <input v-show="titleImg == ''" type="file" accept=".jpeg, .jpg, .png, .gif" name="upload_file" id="js-title-img-input" @change="uploadImage">
           </div>
           <div class="img-edit-options">
           </div>
         </div>
       </div>
       <div class="title-input-container">
-        <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" :placeholder="isShowPlaceHolder ? '请输入标题' : ''" style="height: 46px;" @focus="hidePlaceHolder" @blur="showPlaceHolder"></textarea>
+        <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" placeholder="请输入标题" style="height: 46px;"></textarea>
       </div>
+
+      <z-button
+      :text="previewBtnText"
+      @click.native="toggleViewableContainer"
+      ></z-button>
+
     </section>
-    <div class="editable-container">
+    <div class="editable-container" v-show="isShowEditableContainer">
       <div id="js-entry-content" class="entry-content editable editable" name="content" contenteditable="true" holdertext="请输入正文" content-required="" ui-clean-paste="" ui-scraper="" ui-mention="" ui-editor="" editor-toolbar="js-editor-toolbar" word-min="2" g_editable="true" @focus="hideHolderText" @blur="showHolderText" @keyup="markdownIt"></div>
     </div>
-    <div class="viewable-container">
-      <div class="entry-content editable editable" name="content" v-html="content"></div>
+    <div class="viewable-container" v-show="isShowViewableContainer">
+      <div class="entry-content editable" name="content" v-html="content"></div>
     </div>
   </div>
 </template>
@@ -42,13 +48,18 @@ var md = require('markdown-it')({
   }
 });
 
+import { zButton } from 'z-vue-components'
+
 export default {
   data() {
     return {
       title: '',
+      titleImg: '',
       content: '',
+      previewBtnText: '点击预览',
       isShowHolderText: true,
-      isShowPlaceHolder: true,
+      isShowEditableContainer: true,
+      isShowViewableContainer: false,
       holderText: "<span class='holdertext' holdertext='1' contenteditable='false'>请输入正文</span>"
     };
   },
@@ -56,12 +67,6 @@ export default {
     document.getElementById('js-entry-content').innerHTML = this.holderText
   },
   methods: {
-    hidePlaceHolder: function() {
-      this.isShowPlaceHolder = false
-    },
-    showPlaceHolder: function() {
-      this.isShowPlaceHolder = true
-    },
     hideHolderText: function() {
       if (document.getElementById('js-entry-content').getElementsByClassName('holdertext')[0]) {
         document.getElementById('js-entry-content').innerHTML = ''
@@ -76,17 +81,32 @@ export default {
       this.content = md.render(document.getElementById('js-entry-content').innerText)
     },
     uploadImage: function() {
-      console.log("上传图片");
+      var imgData = new FormData();
+      var imgFile = document.getElementById('js-title-img-input').files[0]
+      imgData.append('smfile', imgFile)
+
+      this.$http.post(
+        'https://sm.ms/api/upload',
+        imgData
+      ).then(function(response) {
+          this.titleImg = response.data.data.url
+        }, function(response) {
+
+        });
+    },
+    toggleViewableContainer: function() {
+      this.isShowEditableContainer = !this.isShowEditableContainer
+      this.isShowViewableContainer = !this.isShowViewableContainer
+      this.isShowViewableContainer ? (this.previewBtnText = "关闭预览") : (this.previewBtnText = "点击预览")
     }
   },
-  components: {}
+  components: {
+    zButton
+  }
 };
 </script>
 
 <style lang="less" scoped>
-::selection {
-    background-color: #dddedf;
-}
 .post-write {
   min-width: 660px;
   margin-top: 16px;
@@ -95,7 +115,7 @@ export default {
     margin: 16px 0;
   }
 
-  .editable-container {
+  .editable-container, .viewable-container {
     position: relative;
     overflow: hidden;
   }
@@ -168,7 +188,7 @@ export default {
     margin: 0 auto;
   }
 
-  .upload-icon {
+  .icon-camera {
     font-size: 42px;
     color: rgba(0,0,0,.2);
     top: 12px;

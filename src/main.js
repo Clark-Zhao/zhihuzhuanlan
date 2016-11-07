@@ -6,6 +6,8 @@ import App from './App'
 Vue.use(VueResource)
 Vue.use(VueRouter)
 
+// Vue.http.options.emulateJSON = true;
+
 import routes from './router.js'
 const router = new VueRouter({
   routes,
