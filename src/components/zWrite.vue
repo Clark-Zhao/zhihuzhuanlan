@@ -1,15 +1,29 @@
 <template lang="html">
   <div class="main post-write">
+    <z-modal
+    :show="isImgUploadFail"
+    :content="'图片上传失败！请重新选择图片上传。'"
+    @closeModal="isImgUploadFail = false"
+     ></z-modal>
     <section class="receptacle">
       <div class="title-img">
         <div class="upload-controls" :class="{'empty': titleImg ==''}">
           <div class="preview-wrapper fileinput-button">
             <img v-show="titleImg != ''" class="preview" :src="titleImg"/>
-            <i v-show="titleImg == ''" class="icon iconfont icon-camera"></i>
+            <i v-show="isShowLoading == false && titleImg == ''" class="icon iconfont icon-camera"></i>
             <input v-show="titleImg == ''" type="file" accept=".jpeg, .jpg, .png, .gif" name="upload_file" id="js-title-img-input" @change="uploadImage">
+            <span class="icon-loading-wraper"><i class="icon iconfont icon-loading" v-show="isShowLoading"></i></span>
           </div>
-          <div class="img-edit-options">
+          <!-- 题图编辑工具栏开始 -->
+          <div class="img-edit-options" v-show="titleImg != ''">
+            <button class="action-button change fileinput-button" @click="changeTitleImg">
+              <i class="icon iconfont icon-camera"></i>
+            </button>
+            <button class="action-button delete" @click="deleteTitleImg">
+              <i class="icon iconfont icon-delete"></i>
+            </button>
           </div>
+          <!-- 题图编辑工具栏结束 -->
         </div>
       </div>
       <div class="title-input-container">
@@ -49,6 +63,7 @@ var md = require('markdown-it')({
 });
 
 import { zButton } from 'z-vue-components'
+import { zModal } from 'z-vue-components'
 
 export default {
   data() {
@@ -57,6 +72,8 @@ export default {
       titleImg: '',
       content: '',
       previewBtnText: '点击预览',
+      isImgUploadFail: false,
+      isShowLoading: false,
       isShowHolderText: true,
       isShowEditableContainer: true,
       isShowViewableContainer: false,
@@ -81,6 +98,7 @@ export default {
       this.content = md.render(document.getElementById('js-entry-content').innerText)
     },
     uploadImage: function() {
+      this.isShowLoading = true
       var imgData = new FormData();
       var imgFile = document.getElementById('js-title-img-input').files[0]
       imgData.append('smfile', imgFile)
@@ -88,20 +106,34 @@ export default {
       this.$http.post(
         'https://sm.ms/api/upload',
         imgData
-      ).then(function(response) {
-          this.titleImg = response.data.data.url
-        }, function(response) {
+      ).then(function(res) {
+        this.isShowLoading = false
+        if (res.data.code == 'success') {
+          this.titleImg = res.data.data.url
+        } else {
+          this.isImgUploadFail = true
+          document.getElementById('js-title-img-input').value = ''
+        }
+        }, function(res) {
 
-        });
+        })
     },
     toggleViewableContainer: function() {
       this.isShowEditableContainer = !this.isShowEditableContainer
       this.isShowViewableContainer = !this.isShowViewableContainer
       this.isShowViewableContainer ? (this.previewBtnText = "关闭预览") : (this.previewBtnText = "点击预览")
+    },
+    changeTitleImg: function(){
+      document.getElementById('js-title-img-input').click()
+    },
+    deleteTitleImg: function() {
+      this.titleImg = ''
+      document.getElementById('js-title-img-input').value = ''
     }
   },
   components: {
-    zButton
+    zButton,
+    zModal
   }
 };
 </script>
@@ -178,6 +210,62 @@ export default {
   -o-transition: all .05s ease-in-out;
   transition: all .05s ease-in-out;
 
+  .upload-controls {
+    .img-edit-options {
+      position: absolute;
+      height: 42px;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      -webkit-transition: all .05s ease-in-out;
+      -moz-transition: all .05s ease-in-out;
+      -o-transition: all .05s ease-in-out;
+      transition: all .05s ease-in-out;
+      background-color: #000;
+      background-color: rgba(0,0,0,.75);
+      border-radius: 4px 0 0;
+      pointer-events: auto;
+
+      &>button {
+        float: left;
+        line-height: 42px;
+        height: 42px;
+        width: 48px;
+        opacity: .9;
+        border: 0;
+        background: 0 0;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        outline: 0;
+        cursor: pointer;
+      }
+
+      &>button:first-child {
+        border-radius: 4px 0 0;
+      }
+
+      &>button+button {
+        border-left: 1px solid #323334;
+        border-left: 1px solid rgba(255,255,255,.12);
+      }
+
+      i {
+        font-size: 18px;
+        color: #fff;
+        -webkit-text-stroke-width: 0px;
+        text-stroke-width: 0px;
+      }
+
+      i.icon-camera {
+        font-size: 16px;
+        top: 3px;
+      }
+    }
+  }
+
   .upload-controls.empty {
     height: 192px;
   }
@@ -186,12 +274,6 @@ export default {
     width: 100%;
     display: block;
     margin: 0 auto;
-  }
-
-  .icon-camera {
-    font-size: 42px;
-    color: rgba(0,0,0,.2);
-    top: 12px;
   }
 
   input {
@@ -223,7 +305,64 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+
+    &>.icon-camera {
+      font-size: 42px;
+      color: rgba(0,0,0,.2);
+      top: 12px;
+    }
+
+    .icon-loading-wraper {
+      position: absolute;
+      z-index: 9999;
+      transform: translate(-12px, -12px);
+      top: 50%;
+      left: 50%;
+
+      &>.icon-loading {
+        color: #50C87E;
+        font-size: 24px;
+        display: inline-block;
+        -webkit-animation: spriteSpin .8s steps(12) infinite;
+        animation: spriteSpin .8s steps(12) infinite;
+      }
+    }
   }
+}
+@keyframes spriteSpin
+{
+0%   {transform:rotate(0deg);}
+25%  {transform:rotate(90deg);}
+50%  {transform:rotate(180deg);}
+75%  {transform:rotate(270deg);}
+100% {transform:rotate(360deg);}
+}
+
+@-moz-keyframes spriteSpin /* Firefox */
+{
+  0%   {transform:rotate(0deg);}
+  25%  {transform:rotate(90deg);}
+  50%  {transform:rotate(180deg);}
+  75%  {transform:rotate(270deg);}
+  100% {transform:rotate(360deg);}
+}
+
+@-webkit-keyframes spriteSpin /* Safari 和 Chrome */
+{
+  0%   {transform:rotate(0deg);}
+  25%  {transform:rotate(90deg);}
+  50%  {transform:rotate(180deg);}
+  75%  {transform:rotate(270deg);}
+  100% {transform:rotate(360deg);}
+}
+
+@-o-keyframes spriteSpin /* Opera */
+{
+  0%   {transform:rotate(0deg);}
+  25%  {transform:rotate(90deg);}
+  50%  {transform:rotate(180deg);}
+  75%  {transform:rotate(270deg);}
+  100% {transform:rotate(360deg);}
 }
 
 @media screen and (max-width: 660px) {
