@@ -11,7 +11,7 @@
           <div class="preview-wrapper fileinput-button">
             <img v-show="titleImg != ''" class="preview" :src="titleImg"/>
             <i v-show="isShowLoading == false && titleImg == ''" class="icon iconfont icon-camera"></i>
-            <input v-show="titleImg == ''" type="file" accept=".jpeg, .jpg, .png, .gif" name="upload_file" id="js-title-img-input" @change="uploadImage">
+            <input v-show="titleImg == ''" type="file" accept=".jpeg, .jpg, .png" name="upload_file" id="js-title-img-input" @change="uploadImage">
             <span class="icon-loading-wraper"><i class="icon iconfont icon-loading" v-show="isShowLoading"></i></span>
           </div>
           <!-- 题图编辑工具栏开始 -->
