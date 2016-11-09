@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <z-progress></z-progress>
+    <z-progress ref="progress"></z-progress>
     <z-header></z-header>
     <main class="main-container">
       <router-view></router-view>
@@ -19,6 +19,20 @@ export default {
     zHeader,
 
     zProgress
+  },
+  mounted() {
+    this.startProgress()
+  },
+  watch: {
+    '$route': function() {
+      this.startProgress()
+      scrollTo(0,0)
+    }
+  },
+  methods: {
+    startProgress: function() {
+      this.$refs.progress.startProgress()
+    }
   }
 }
 </script>
