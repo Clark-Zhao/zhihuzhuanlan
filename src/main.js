@@ -1,21 +1,39 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
+
 import App from './App'
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
+Vue.use(Vuex)
 
-// Vue.http.options.emulateJSON = true;
+Vue.http.options.emulateJSON = true
 
+// 路由控制
 import routes from './router.js'
 const router = new VueRouter({
   routes
 })
+
+// 状态管理
+const store = new Vuex.Store({
+  state: {
+    auth: false
+  },
+  mutations: {
+    isLogin (state) {
+      state.auth = true
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   template: '<App/>',
   components: { App },
-  router
+  router,
+  store
 }).$mount('#app')

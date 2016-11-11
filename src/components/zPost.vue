@@ -2,6 +2,9 @@
   <div class="main receptacle post-view">
     <article class="entry">
       <header>
+        <div class="entry-title-image" v-if="titleImg != ''">
+          <img :src="titleImg" alt="题图" />
+        </div>
         <h1 class="multiline1 entry-title">{{title}}</h1>
         <div class="entry-meta">
           <a>
@@ -10,7 +13,7 @@
             :height=36
             :src="'static/images/avatar.jpg'"
             :alt="'作者头像'"
-            :radius="'50%'"></z-imageinput>{{author.name}}
+            :radius="'50%'"></z-imageinput>{{author}}
           </a>
           <span class="bull">·</span>
           <time>{{publishedTime}}</time>
@@ -36,15 +39,30 @@
 </template>
 
 <script>
+import 'highlight.js/styles/github.css'
+var hljs = require('highlight.js'); // https://highlightjs.org/
+// Actual default values
+var md = require('markdown-it')({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return '<pre class="hljs"><code>' +
+               hljs.highlight(lang, str, true).value +
+               '</code></pre>';
+      } catch (__) {}
+    }
+    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+  }
+});
+
 import { zImageinput } from 'z-vue-components'
 
 export default {
   data() {
     return {
       title: '',
-      author: {
-        name: ''
-      },
+      titleImg: '',
+      author: '',
       publishedTime: '',
       content: ''
     };
@@ -54,14 +72,22 @@ export default {
   },
   methods: {
     getPost: function() {
-      this.$http.get('static/api/post.json').then((response) => {
+      this.$http.get('http://192.168.10.50:3000/api/post',
+        {
+          params: {
+            'id': this.$route.params.id
+          }
+        }
+      ).then((response) => {
+      // this.$http.get('static/api/post.json').then((response) => {
         // success callback
-        let data = response.data.data
+        let data = response.data
 
         this.title = data.title
-        this.author.name = data.author.name
-        this.publishedTime = data.publishedTime
-        this.content = data.content
+        this.titleImg = data.titleImg
+        this.author = data.author
+        this.publishedTime = data.publishedTime.replace('T', ' ').replace(/.[\d]{3}Z/,'')
+        this.content = md.render(data.content)
       }, (response) => {
         // error callback
       });
@@ -78,6 +104,15 @@ export default {
   margin-top: 0;
   padding-top: 22px;
   padding-bottom: 0;
+
+  .entry-title-image {
+    margin-bottom: 22px;
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
 
   .entry-title {
     font-size: 32px;

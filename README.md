@@ -33,6 +33,7 @@ vue-cli
 5. less-loader
 6. markdown-it
 7. highlight.js
+8. js-md5
 
 ## webpack配置
 

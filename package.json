@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "highlight.js": "^9.8.0",
+    "js-md5": "^0.4.1",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "markdown-it": "^8.1.0",

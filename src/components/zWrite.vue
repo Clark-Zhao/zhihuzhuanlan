@@ -27,12 +27,17 @@
         </div>
       </div>
       <div class="title-input-container">
-        <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" placeholder="请输入标题" style="height: 46px;"></textarea>
+        <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" placeholder="请输入标题" style="height: 46px;" v-model="title"></textarea>
       </div>
 
       <z-button
       :text="previewBtnText"
       @click.native="toggleViewableContainer"
+      ></z-button>
+
+      <z-button
+      :text="'发布'"
+      @click.native="publish"
       ></z-button>
 
     </section>
@@ -99,8 +104,8 @@ export default {
     },
     uploadImage: function() {
       this.isShowLoading = true
-      var imgData = new FormData();
-      var imgFile = document.getElementById('js-title-img-input').files[0]
+      let imgData = new FormData()
+      let imgFile = document.getElementById('js-title-img-input').files[0]
       imgData.append('smfile', imgFile)
 
       this.$http.post(
@@ -129,6 +134,24 @@ export default {
     deleteTitleImg: function() {
       this.titleImg = ''
       document.getElementById('js-title-img-input').value = ''
+    },
+    publish: function() {
+      if (document.getElementById('js-entry-content').innerText == '请输入正文') {
+        document.getElementById('js-entry-content').innerText = ''
+      }
+      this.$http.post(
+        'http://localhost:3000/api/drafts/publish',
+        {
+          'title': this.title,
+          'titleImg': this.titleImg,
+          'author': '天道',
+          'content': document.getElementById('js-entry-content').innerText
+        }
+      ).then(function(res) {
+        console.log("发布成功");
+        }, function(res) {
+
+        })
     }
   },
   components: {

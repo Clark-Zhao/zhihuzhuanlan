@@ -1,12 +1,12 @@
 <template lang="html">
-  <div id="header-holder">
+  <div id="header-holder" v-if="$route.path != '/login'">
     <header id="header" class="navbar" :class="{ 'navbar-fixed': isFixedNavbar, 'navbar-fixed-show': isShowNavbar}">
       <div class="navbar-logo-container">
-        <a href="//www.zhaoyuxiang.cn" target="_blank" class="logo icon-ic_zyx_logo" aria-label="首页">趙</a>
+        <router-link to="/" class="logo icon-ic_zyx_logo" aria-label="首页">趙</router-link>
       </div>
-      <div class="navbar-title-container clearfix anim show">
+      <div class="navbar-title-container clearfix anim" :class="{'show': scrollTop > 270 || $route.path != '/'}">
         <div class="img">
-          <a>
+          <router-link to="/">
             <z-imageinput
             :width=38
             :height=38
@@ -14,11 +14,11 @@
             :alt="'作者头像'"
             :radius="'50%'"
             ></z-imageinput>
-          </a>
+          </router-link>
         </div>
         <div class="titles oneline">
           <div class="main-title">
-            <a>天道寺</a>
+            <router-link to="/">天道寺</router-link>
           </div>
         </div>
         <div class="functions">
@@ -26,10 +26,13 @@
         </div>
       </div>
       <div class="navbar-menu-container close">
-        <a class="menu-button">
+        <a class="menu-button" v-if="$store.state.auth">
           <i class="icon iconfont icon-more"></i>
         </a>
       </div>
+      <router-link to="/login" v-if="!$store.state.auth">
+        <z-button :text="'登录'"></z-button>
+      </router-link>
       <div class="navbar-write-container">
         <router-link to="/write">
           <i class="icon iconfont icon-edit"></i>
@@ -150,6 +153,11 @@ export default {
           text-overflow: ellipsis;
           font-weight: 700;
           white-space: nowrap;
+
+          a {
+            color: #333;
+            text-decoration: none;
+          }
         }
       }
 
@@ -221,10 +229,24 @@ export default {
         &:hover {
           color: #333;
         }
+      }
+    }
 
-        // i {
-        //   margin-right: 3px;
-        // }
+    .z-btn {
+      float: right;
+      margin: 13px 16px 0 6px;
+      width: 72px;
+      height: 32px;
+      padding: 0;
+      min-height: 0;
+      min-width: 0;
+      line-height: 30px;
+      box-sizing: border-box;
+      border-color: #0080ff;
+      color: #0080ff;
+
+      &:hover {
+        background-color: rgba(0,128,255,.06);
       }
     }
   }
@@ -281,6 +303,12 @@ export default {
         }
       }
     }
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .navbar-write-container {
+    display: none;
   }
 }
 </style>

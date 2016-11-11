@@ -42,13 +42,16 @@
       </div>
 
       <ul class="items">
-        <li class="item" v-for="item in items">
+        <li class="item" v-for="item in items" :class="{'item-with-title-img': item.titleImg != ''}">
           <article class="hentry">
-            <router-link class="entry-link" :to="{ name: 'post', params: { id: item.slug } }">
+            <router-link class="entry-link" :to="{ name: 'post', params: { id: item.id } }">
               <h1 class="entry-title">{{item.title}}</h1>
+              <div class="title-img-container" v-if="item.titleImg != ''">
+                <div class="title-img-preview" :style="{'background-image': 'url(' + item.titleImg + ')'}"></div>
+              </div>
               <section class="entry-summary">
                 <p>
-                  {{item.content}}
+                  {{item.content}}...
                   <span class="read-all">查看全文 &gt;</span>
                 </p>
               </section>
@@ -97,21 +100,35 @@ export default {
   },
   methods: {
     getPostList: function() {
-      this.$http.get('static/api/posts.json').then((response) => {
+      this.$http.get('http://192.168.10.50:3000/api/posts').then((response) => {
+      // this.$http.get('static/api/posts.json').then((response) => {
         // success callback
-        let data = response.data.data
-        for (var i = 0; i < data.posts.length; i++) {
-          let item = data.posts[i]
+        let data = response.data
+        for (var i = 0; i < data.length; i++) {
+          let item = data[i]
+
+          item.content = item.content.replace(/```js+/g, '').replace(/```+/g, '').replace(/\s+/g, '').substr(0, 88)
+
+          // 格式化时间
+          const publishedTime = new Date(item.publishedTime)
+          const year = publishedTime.getFullYear()
+          const month = ((publishedTime.getMonth() + 1) < 10) ? ('0' + (publishedTime.getMonth() + 1)) : (publishedTime.getMonth() + 1)
+          const date = (publishedTime.getDate() < 10) ? ('0' + publishedTime.getDate()) : publishedTime.getDate()
+          const hour = (publishedTime.getHours() < 10) ? ('0' + publishedTime.getHours()) : publishedTime.getHours()
+          const min = (publishedTime.getMinutes() < 10) ? ('0' + publishedTime.getMinutes()) : publishedTime.getMinutes()
+          const sec = (publishedTime.getSeconds() < 10) ? ('0' + publishedTime.getSeconds()) : publishedTime.getSeconds()
+          item.publishedTime = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec
 
           this.items.push({
             author: item.author,
             publishedTime: item.publishedTime,
             tags: item.tags,
             title: item.title,
+            titleImg: item.titleImg,
             content: item.content,
             likesCount: item.likesCount,
             commentsCount: item.commentsCount,
-            slug: item.slug
+            id: item._id
           })
         }
       }, (response) => {
@@ -314,6 +331,10 @@ export default {
     .entry-link {
       text-decoration: none;
 
+      .title-img-container {
+        position: absolute;
+      }
+
       .entry-title {
         font-size: 20px;
         line-height: 1.5;
@@ -366,6 +387,33 @@ export default {
       }
     }
   }
+
+  .item.item-with-title-img {
+    min-height: 180px;
+    padding-bottom: 0;
+
+    .entry-title, .entry-summary, .entry-meta {
+      margin-left: 260px;
+    }
+
+    .title-img-container {
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 180px;
+
+      .title-img-preview {
+        height: 100%;
+        background-color: #f7f8f9;
+        background-size: cover;
+        background-position: center;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 660px) {
@@ -388,6 +436,21 @@ export default {
 
       &:after {
         left: 96px;
+      }
+    }
+
+    .item.item-with-title-img {
+      article {
+        padding-top: 230px;
+      }
+
+      .entry-title, .entry-summary, .entry-meta {
+        margin-left: 0;
+      }
+
+      .title-img-container {
+        width: 100%;
+        height: 220px;
       }
     }
   }
