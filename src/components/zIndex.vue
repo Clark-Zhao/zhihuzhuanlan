@@ -29,7 +29,7 @@
       </div>
 
       <div class="followers">
-        <a>1314 人关注</a>
+        <router-link to="/followers">1314 人关注</router-link>
       </div>
     </div>
 
@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     getPostList: function() {
-      this.$http.get('http://192.168.10.50:3000/api/posts').then((response) => {
+      this.$http.get('http://' + this.$store.state.urlBase +':3000/api/posts').then((response) => {
       // this.$http.get('static/api/posts.json').then((response) => {
         // success callback
         let data = response.data
@@ -262,6 +262,10 @@ export default {
   a {
     color: gray;
     text-decoration: none;
+
+    &:hover {
+      color: #333;
+    }
   }
 }
 

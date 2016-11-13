@@ -31,6 +31,8 @@ export default {
 
       if (to.path == '/write' && this.$store.state.auth == false) {
         this.$router.push('/login')
+      } else if (to.path == '/login' && this.$store.state.auth == true) {
+        this.$router.push(from.path)
       }
     }
   },
@@ -39,7 +41,7 @@ export default {
       this.$refs.progress.startProgress()
     },
     isLogin: function() {
-      this.$http.get('http://localhost:3000/api/islogin',
+      this.$http.get('http://' + this.$store.state.urlBase +':3000/api/islogin',
         {
           params: {
             token: this.getCookie('token')

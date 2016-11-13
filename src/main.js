@@ -20,7 +20,8 @@ const router = new VueRouter({
 // 状态管理
 const store = new Vuex.Store({
   state: {
-    auth: false
+    auth: false,
+    urlBase: 'localhost'
   },
   mutations: {
     isLogin (state) {
