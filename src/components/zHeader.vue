@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="header-holder" v-if="$route.path != '/login'">
-    <header id="header" class="navbar" :class="{ 'navbar-fixed': isFixedNavbar, 'navbar-fixed-show': isShowNavbar}">
+    <header id="header" class="navbar" :class="{ 'navbar-fixed': isFixedNavbar, 'navbar-fixed-show': isShowNavbar}" :style="{'border-bottom-color': $route.path=='/followers' ? 'rgba(0, 0, 0, 0.08)' : ''}">
       <div class="navbar-logo-container">
         <router-link to="/" class="logo icon-ic_zyx_logo" aria-label="首页">趙</router-link>
       </div>
@@ -21,16 +21,16 @@
             <router-link to="/">天道寺</router-link>
           </div>
         </div>
-        <div class="functions">
-          <z-button :text="'关注专栏'"></z-button>
-        </div>
+        <!-- <div class="functions">
+          <z-button :text="'成为友人'"></z-button>
+        </div> -->
       </div>
       <div class="navbar-menu-container close">
         <a class="menu-button" v-if="$store.state.auth">
           <i class="icon iconfont icon-more"></i>
         </a>
       </div>
-      <router-link to="/login" v-if="!$store.state.auth">
+      <!-- <router-link to="/login" v-if="!$store.state.auth">
         <z-button :text="'登录'"></z-button>
       </router-link>
       <div class="navbar-write-container">
@@ -38,7 +38,7 @@
           <i class="icon iconfont icon-edit"></i>
           写文章
         </router-link>
-      </div>
+      </div> -->
     </header>
   </div>
 </template>

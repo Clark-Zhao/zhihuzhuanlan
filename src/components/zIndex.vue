@@ -14,9 +14,9 @@
       <div class="title">天道寺</div>
 
       <div class="functions">
-        <z-button
-        :text="'关注专栏'"
-        ></z-button>
+        <!-- <z-button
+        :text="'成为友人'">
+        </z-button> -->
 
         <!-- <div class="more-funcs">
           <span class="menu-button">
@@ -29,7 +29,7 @@
       </div>
 
       <div class="followers">
-        <router-link to="/followers">1314 人关注</router-link>
+        <router-link to="/followers">{{total}} 人关注</router-link>
       </div>
     </div>
 
@@ -63,9 +63,9 @@
                 <time>{{item.publishedTime}}</time>
               </div>
               <div class="entry-func">
-                <a>{{item.likesCount}}<span> 赞</span></a>
+                <router-link :to="{ name: 'post', params: { id: item.id } }">{{item.likesCount}}<span> 赞</span></router-link>
                 <span class="bull">·</span>
-                <a>{{item.commentsCount}}<span> 条评论</span></a>
+                <router-link :to="{ name: 'post', params: { id: item.id } }">{{item.commentsCount}}<span> 条评论</span></router-link>
               </div>
             </footer>
           </article>
@@ -88,7 +88,8 @@ import { zButton } from 'z-vue-components'
 export default {
   data() {
     return {
-      items: []
+      items: [],
+      total: ''
     };
   },
   components: {
@@ -97,6 +98,11 @@ export default {
   },
   mounted() {
     this.getPostList()
+    this.$store.state.title = "天道寺"
+
+    this.$http.get('http://' + this.$store.state.urlBase +':3000/api/followers').then((res) => {
+      this.total = res.data.length
+    })
   },
   methods: {
     getPostList: function() {
@@ -388,6 +394,15 @@ export default {
         right: 0;
         color: gray;
         font-size: 14px;
+
+        a {
+          text-decoration: none;
+          color: gray;
+
+          &:hover {
+            color: #333;
+          }
+        }
       }
     }
   }

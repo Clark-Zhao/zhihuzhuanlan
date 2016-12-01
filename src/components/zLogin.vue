@@ -68,7 +68,7 @@ export default {
           console.log(res.data.data.message);
           this.setCookie('token', res.data.data.token)
           this.$store.state.auth = true
-          this.$router.push('/')
+          this.$router.go(-1)
         }
       }, function(res) {
         console.log(res);

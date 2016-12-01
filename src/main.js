@@ -21,7 +21,9 @@ const router = new VueRouter({
 const store = new Vuex.Store({
   state: {
     auth: false,
-    urlBase: 'localhost'
+    urlBase: '192.168.10.50',
+    apiBase: 'http://192.168.10.50:3000/api/',
+    title: '天道寺'
   },
   mutations: {
     isLogin (state) {

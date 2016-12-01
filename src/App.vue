@@ -23,6 +23,7 @@ export default {
   mounted() {
     this.startProgress()
     this.isLogin()
+    this.getIp()
   },
   watch: {
     '$route': function(to, from) {
@@ -34,6 +35,9 @@ export default {
       } else if (to.path == '/login' && this.$store.state.auth == true) {
         this.$router.push(from.path)
       }
+    },
+    '$store.state.title': function() {
+      document.title = this.$store.state.title
     }
   },
   methods: {
@@ -70,6 +74,16 @@ export default {
       } else {
         return null;
       }
+    },
+    getIp: function() {
+      this.$http.get(
+        this.$store.state.apiBase +'getIp'
+      ).then(
+        function(res) {
+
+        }, function(res) {
+
+      })
     }
   }
 }
@@ -101,6 +115,13 @@ export default {
 
   a {
     text-decoration: none;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
   }
 
   .clearfix:before, .clearfix:after {

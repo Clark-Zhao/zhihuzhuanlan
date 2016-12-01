@@ -1,23 +1,23 @@
 <template lang="html">
   <div class="main receptacle column-followers-main">
 
-    <h2 class="page-title">1314人关注专栏</h2>
+    <h2 class="page-title">{{total}} 人关注</h2>
 
     <div>
       <ul class="column-followers clearfix">
-        <li class="ui-user-item" v-for="item in 10">
-          <a class="user-avatar" href="http://havee.me/">
+        <li class="ui-user-item" v-for="item in items">
+          <a class="user-avatar" :href="item.profileUrl">
             <z-imageinput
             :width=48
             :height=48
-            :src="'static/images/avatar.jpg'"
-            :radius="'50%'"></z-imageinput>
+            :src="item.avatar"
+            :radius="'20px'"></z-imageinput>
           </a>
           <div class="user-intro">
-            <a href="http://havee.me/" target="_blank">
-              <strong>Havee's Space</strong>
+            <a :href="item.profileUrl" target="_blank">
+              <strong>{{item.name}}</strong>
             </a>
-            <span class="bio">即使你走到再怎样深的低谷，我不会离你而去</span>
+            <span class="bio">{{item.bio}}</span>
           </div>
         </li>
       </ul>
@@ -32,7 +32,27 @@ import { zImageinput } from 'z-vue-components'
 export default {
   data() {
     return {
+      items: [],
+      total: 0
     };
+  },
+  mounted() {
+    this.$store.state.title = '关注者'
+    this.$http.get('http://' + this.$store.state.urlBase +':3000/api/followers').then((res) => {
+      let data = res.data
+      this.total = data.length
+      for (var i = 0; i < data.length; i++) {
+        let item = data[i]
+
+        this.items.push({
+          avatar: item.avatar || 'static/images/avatarholder.jpg',
+          bio: item.bio,
+          description: item.description,
+          name: item.name,
+          profileUrl: item.profileUrl
+        })
+      }
+    })
   },
   components: {
     zImageinput

@@ -34,6 +34,27 @@
         <p>这就是快乐，这也是担当。</p>
         <p>祝你变成这样的人，祝你找到这样的同伴。</p> -->
       </section>
+
+      <footer>
+        <div class="entry-exinfo clearfix"></div>
+        <div class="entry-controls clearfix">
+          <div class="right-section">
+            <div class="post-share-button post-menu-button menu-button-no-arrow ui-menu-button close">
+              <a href="javascript:;" class="menu-button control-item share"><i class="icon iconfont icon-share"></i>分享</a>
+              <menu class="menu">
+
+              </menu>
+            </div>
+            <a href="javascript:;" class="control-item report" v-if="false"><i class="icon iconfont icon-report"></i>举报</a>
+          </div>
+          <div class="left-section">
+            <div class="votes">
+              <a href="javascript:;" class="control-item" :class="{'active': isZan}" @click="like"><i class="icon iconfont icon-appreciatefill"></i>{{likesCount}}</a>
+            </div>
+          </div>
+        </div>
+        <z-comments></z-comments>
+      </footer>
     </article>
   </div>
 </template>
@@ -56,6 +77,7 @@ var md = require('markdown-it')({
 });
 
 import { zImageinput } from 'z-vue-components'
+import zComments from './_zComments.vue'
 
 export default {
   data() {
@@ -64,7 +86,10 @@ export default {
       titleImg: '',
       author: '',
       publishedTime: '',
-      content: ''
+      content: '',
+      likesCount: 0,
+      isZan: false,
+      commentsCount: 0
     };
   },
   mounted() {
@@ -72,29 +97,46 @@ export default {
   },
   methods: {
     getPost: function() {
-      this.$http.get('http://192.168.10.50:3000/api/post',
+      this.$http.get(this.$store.state.apiBase + 'post',
         {
           params: {
             'id': this.$route.params.id
           }
         }
       ).then((response) => {
-      // this.$http.get('static/api/post.json').then((response) => {
-        // success callback
         let data = response.data
 
         this.title = data.title
+        this.$store.state.title = this.title
         this.titleImg = data.titleImg
         this.author = data.author
         this.publishedTime = data.publishedTime.replace('T', ' ').replace(/.[\d]{3}Z/,'')
         this.content = md.render(data.content)
+        this.likesCount = data.likesCount
+        this.commentsCount = data.commentsCount
       }, (response) => {
+        // error callback
+      });
+    },
+    like: function() {
+      this.$http.get('http://192.168.10.50:3000/api/likes',
+        {
+          params: {
+            'id': this.$route.params.id
+          }
+        }
+      ).then((res) => {
+        if (res.data.message == 'success') {
+          this.likesCount++
+        }
+      }, (res) => {
         // error callback
       });
     }
   },
   components: {
-    zImageinput
+    zImageinput,
+    zComments
   }
 };
 </script>
@@ -147,6 +189,80 @@ export default {
       margin: 20px 0;
     }
   }
+
+  footer {
+    line-height: 24px;
+    margin-bottom: 48px;
+
+    .entry-controls {
+      margin: 40px 0;
+      text-align: right;
+      line-height: 36px;
+
+      .right-section {
+        float: right;
+
+        .post-menu-button {
+          padding-bottom: 10px;
+        }
+
+        .ui-menu-button, .ui-pop-button {
+          position: relative;
+          display: inline-block;
+        }
+      }
+
+      .control-item {
+        margin-left: 15px;
+        color: gray;
+        font-size: 15px;
+        opacity: 1;
+        -webkit-transition: all .05s ease-in-out;
+        -moz-transition: all .05s ease-in-out;
+        -o-transition: all .05s ease-in-out;
+        transition: all .05s ease-in-out;
+      }
+
+      .votes {
+        text-align: left;
+
+        a {
+          margin-left: 0;
+          display: inline-block;
+          color: #50C87E;
+          border: 1px solid #50C87E;
+          height: 34px;
+          line-height: 34px;
+          padding: 0 20px;
+          text-align: center;
+          border-radius: 4px;
+          font-size: 14px;
+
+          &:hover {
+            background: rgba(77,190,46,.06);
+            color: #50C87E;
+          }
+
+          i {
+            position: relative;
+            top: 5px;
+            left: -2px;
+            margin-right: 6px;
+          }
+        }
+
+        a.active {
+          background: #50C87E;
+          color: #fff;
+
+          &:hover {
+            background: rgba(77,190,46,.06);
+            color: #50C87E;
+          }
+        }
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 660px) {
@@ -156,6 +272,11 @@ export default {
     }
 
     header, .entry-content {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .entry-controls {
       padding-left: 16px;
       padding-right: 16px;
     }
