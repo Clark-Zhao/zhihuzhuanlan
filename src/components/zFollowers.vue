@@ -38,7 +38,7 @@ export default {
   },
   mounted() {
     this.$store.state.title = '关注者'
-    this.$http.get('http://' + this.$store.state.urlBase +':3000/api/followers').then((res) => {
+    this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
       let data = res.data
       this.total = data.length
       for (var i = 0; i < data.length; i++) {

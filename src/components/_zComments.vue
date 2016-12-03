@@ -169,7 +169,7 @@ export default {
         this.isAlertShow = true
       } else {
         this.commentContent = document.getElementById('comment').innerText
-        this.$http.post('http://' + this.$store.state.urlBase + ':3000/api/comments',
+        this.$http.post(this.$store.state.apiBase + 'comments',
           {
             post_id: this.$route.params.id,
             name: this.commentName,
