@@ -45,7 +45,7 @@ export default {
       this.$refs.progress.startProgress()
     },
     isLogin: function() {
-      this.$http.get(this.$store.state.apiBase +'api/islogin',
+      this.$http.get(this.$store.state.apiBase +'islogin',
         {
           params: {
             token: this.getCookie('token')
