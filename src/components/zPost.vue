@@ -119,7 +119,7 @@ export default {
       });
     },
     like: function() {
-      this.$http.get(this.$store.state.apiBase + 'api/likes',
+      this.$http.get(this.$store.state.apiBase + 'likes',
         {
           params: {
             'id': this.$route.params.id

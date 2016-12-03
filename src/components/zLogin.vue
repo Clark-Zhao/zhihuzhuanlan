@@ -55,7 +55,7 @@ export default {
   methods: {
     login: function() {
       this.$http.post(
-        'http://' + this.$store.state.urlBase +':3000/api/login',
+        this.$store.state.apiBase + 'login',
         {
           'username': this.login.username,
           'password': md5(this.login.password)
