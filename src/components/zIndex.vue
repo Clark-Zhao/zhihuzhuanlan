@@ -100,13 +100,13 @@ export default {
     this.getPostList()
     this.$store.state.title = "天道寺"
 
-    this.$http.get('http://' + this.$store.state.urlBase +':3000/api/followers').then((res) => {
+    this.$http.get(this.$store.state.apiBase +'api/followers').then((res) => {
       this.total = res.data.length
     })
   },
   methods: {
     getPostList: function() {
-      this.$http.get('http://' + this.$store.state.urlBase +':3000/api/posts').then((response) => {
+      this.$http.get(this.$store.state.apiBase +'api/posts').then((response) => {
       // this.$http.get('static/api/posts.json').then((response) => {
         // success callback
         let data = response.data

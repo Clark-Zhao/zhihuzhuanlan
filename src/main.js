@@ -22,7 +22,7 @@ const store = new Vuex.Store({
   state: {
     auth: false,
     urlBase: '192.168.10.50',
-    apiBase: 'http://192.168.10.50:3000/api/',
+    apiBase: 'http://59.111.101.254:3000/api/',
     title: '天道寺'
   },
   mutations: {

@@ -119,7 +119,7 @@ export default {
       });
     },
     like: function() {
-      this.$http.get('http://192.168.10.50:3000/api/likes',
+      this.$http.get(this.$store.state.apiBase + 'api/likes',
         {
           params: {
             'id': this.$route.params.id
