@@ -38,15 +38,15 @@
       <footer>
         <div class="entry-exinfo clearfix"></div>
         <div class="entry-controls clearfix">
-          <div class="right-section">
+          <!-- <div class="right-section">
             <div class="post-share-button post-menu-button menu-button-no-arrow ui-menu-button close">
               <a href="javascript:;" class="menu-button control-item share"><i class="icon iconfont icon-share"></i>分享</a>
               <menu class="menu">
 
               </menu>
             </div>
-            <a href="javascript:;" class="control-item report" v-if="false"><i class="icon iconfont icon-report"></i>举报</a>
-          </div>
+            <a href="javascript:;" class="control-item report"><i class="icon iconfont icon-report"></i>举报</a>
+          </div> -->
           <div class="left-section">
             <div class="votes">
               <a href="javascript:;" class="control-item" :class="{'active': isZan}" @click="like"><i class="icon iconfont icon-appreciatefill"></i>{{likesCount}}</a>

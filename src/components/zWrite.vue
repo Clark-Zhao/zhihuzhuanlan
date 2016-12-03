@@ -3,7 +3,7 @@
     <z-modal
     :show="isImgUploadFail"
     :content="'图片上传失败！请重新选择图片上传。'"
-    @closeModal="isImgUploadFail = false"
+    @close-modal="isImgUploadFail = false"
      ></z-modal>
     <section class="receptacle">
       <div class="title-img">

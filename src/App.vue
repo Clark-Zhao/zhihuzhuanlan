@@ -77,7 +77,7 @@ export default {
     },
     getIp: function() {
       this.$http.get(
-        this.$store.state.apiBase +'getIp'
+        this.$store.state.apiBase +'getip'
       ).then(
         function(res) {
 

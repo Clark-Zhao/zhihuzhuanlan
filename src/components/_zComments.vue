@@ -32,14 +32,14 @@
         <z-modal
         :show="isAlertShow"
         :content="alertContent"
-        @closeModal="isAlertShow=false"
+        @close-modal="isAlertShow=false"
         ></z-modal>
       </form>
       <div class="comment-list-container ui-pagination">
         <ul class="comment-list">
           <li class="comment-item" v-for="(item, index) in items">
             <div class="comment-item-inner-normal">
-              <a :href="item.url" class="avatar-link" target="_blank" v-if="item.url != ''">
+              <!-- <a :href="item.url" class="avatar-link" target="_blank" v-if="item.url != ''">
                 <z-imageinput
                 :height=36
                 :width=36
@@ -54,13 +54,13 @@
                 :src="item.avatar"
                 :radius="'50%'"
                 ></z-imageinput>
-              </a>
+              </a> -->
               <div class="comment-body">
                 <div class="comment-hd">
-                  <a :href="item.url" target="_blank" v-if="item.url != 'http://'">{{item.name}}</a>
+                  <a class="link" :href="item.url" target="_blank" v-if="item.url != 'http://'">{{item.name}}</a>
                   <a class="nolink" v-else>{{item.name}}</a>
                   <span class="in-reply-to" v-if="item.toName != ''">
-                    回复 <a :href="item.toUrl" target="_blank" v-if="item.toUrl != 'http://'">{{item.toName}}</a><a class="nolink" v-else>{{item.toName}}</a>
+                    回复 <a class="link" :href="item.toUrl" target="_blank" v-if="item.toUrl != 'http://'">{{item.toName}}</a><a class="nolink" v-else>{{item.toName}}</a>
                   </span>
                 </div>
                 <div class="comment-content">{{item.content}}</div>
@@ -121,6 +121,7 @@ export default {
   },
   methods: {
     getComments() {
+      this.items = []
       this.$http.get(this.$store.state.apiBase + 'comments',
         {
           params: {
@@ -186,18 +187,8 @@ export default {
 
           let info = res.data
 
-          this.items.unshift({
-            name: info.name,
-            avatar: info.avatar || 'static/images/avatarholder.jpg',
-            createdTime: info.createdTime.replace('T', ' ').replace(/.[\d]{3}Z/,''),
-            url: info.url,
-            content: info.content,
-            toName: info.toName,
-            toUrl: info.toUrl,
-            likesCount: info.likesCount
-          })
+          this.getComments()
 
-          this.commentsTotal++
           this.commentToName = ''
           document.getElementById('comment').innerHTML = ''
         }, (res) => {
@@ -356,12 +347,9 @@ export default {
         float: left;
       }
 
-      a {
+      a.link {
         color: #259;
-
-        &:hover {
-          text-decoration: underline;
-        }
+        text-decoration: underline;
       }
 
       .nolink:hover {
@@ -369,7 +357,8 @@ export default {
       }
 
       .comment-body {
-        margin: 0 0 0 60px;
+        margin: 0 0 0 60px; //显示头像用
+        margin: 0px;
       }
 
       .comment-hd, .comment-ft {
