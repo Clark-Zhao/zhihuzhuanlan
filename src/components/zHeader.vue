@@ -21,9 +21,9 @@
             <router-link to="/">天道寺</router-link>
           </div>
         </div>
-        <!-- <div class="functions">
-          <z-button :text="'成为友人'"></z-button>
-        </div> -->
+        <div class="functions" v-if="$route.path === '/followers'">
+          <z-button :text="'交个 ♂ 朋友'" class="makefriends" @click.native="isShowAside = true"></z-button>
+        </div>
       </div>
       <div class="navbar-menu-container close">
         <a class="menu-button" v-if="$store.state.auth">
@@ -31,7 +31,7 @@
         </a>
       </div>
       <!-- <router-link to="/login" v-if="!$store.state.auth">
-        <z-button :text="'登录'"></z-button>
+        <z-button :text="'登录'" class="login"></z-button>
       </router-link>
       <div class="navbar-write-container">
         <router-link to="/write">
@@ -40,32 +40,70 @@
         </router-link>
       </div> -->
     </header>
+
+    <z-aside
+    :show="isShowAside"
+    :title="'友链申请'"
+    class="submit-link"
+    @close-aside="isShowAside = false">
+      <div class="">
+        <p>你已将本网站的友链放置在：</p>
+        <input type="text" v-model="reviewUrl" placeholder="必填（网址）">
+      </div>
+      <div class="">
+        <p>你想要在友链中显示的名字：</p>
+        <input type="text" v-model="name" placeholder="必填">
+      </div>
+      <div class="">
+        <p>你的网站地址：</p>
+        <input type="text" v-model="profileUrl" placeholder="必填（网址）">
+      </div>
+      <div class="">
+        <p>你想要在友链中显示的简介：</p>
+        <input type="text" v-model="bio" placeholder="选填">
+      </div>
+      <div class="">
+        <p>你想要在友链中显示的头像链接：</p>
+        <input type="text" v-model="avatar" placeholder="选填（网址）">
+      </div>
+
+      <z-button
+      :text="'提交'"
+      :type="'info'"
+      @click.native="submitLink"
+      ></z-button>
+    </z-aside>
+
+    <z-modal
+    :show="isShowAlert"
+    :content="alertMessage"
+    @close-modal="isShowAlert = false">
+    <z-modal>
   </div>
 </template>
 
 <script>
-import { zImageinput} from 'z-vue-components'
-import { zButton } from 'z-vue-components'
-
 export default {
-  components: {
-    zImageinput,
-    zButton
-  },
   data() {
     return {
       scrollTop: 0,
       isFixedNavbar: false,
-      isShowNavbar: false
+      isShowNavbar: false,
+      reviewUrl: '',
+      name: '',
+      profileUrl: '',
+      bio: '',
+      avatar: '',
+      isShowAside: false,
+      isShowAlert: false,
+      alertMessage: ''
     };
   },
   mounted() {
-    window.onscroll = () => {
-      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    }
-  },
-  computed: {
-
+    var self = this
+    addEventListener('scroll', function() {
+      self.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    })
   },
   watch: {
     'scrollTop': function(newTop, oldTop) {
@@ -79,11 +117,77 @@ export default {
         this.isFixedNavbar = true
       }
     }
+  },
+  methods: {
+    submitLink: function() {
+      if (!this.reviewUrl) {
+        alert('请填写你放置本网站友链的网址')
+        return
+      } else if (!this.name) {
+        alert('请填写你想要在友链中显示的名字')
+        return
+      } else if (!this.profileUrl) {
+        alert('请填写你的网站链接')
+        return
+      }
+      this.$http.post(
+        this.$store.state.apiBase +'submitlink',
+        {
+          'reviewUrl': this.reviewUrl,
+          'name': this.name,
+          'profileUrl': this.profileUrl,
+          'bio': this.bio,
+          'avatar': this.avatar
+        }
+      ).then((res) => {
+        this.isShowAside = false
+        this.isShowAlert = true
+        this.alertMessage = res.data.data.message
+      })
+    }
   }
 };
 </script>
 
 <style lang="less" scpoed>
+.submit-link {
+
+  .z-aside-content {
+    div {
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    input {
+      margin-top: 10px;
+      padding: 9px 13px;
+      font-size: 15px;
+      min-height: 26px;
+      line-height: 26px;
+      white-space: pre-wrap;
+      cursor: text;
+      border: 1px solid rgba(0,0,0,.16);
+      border-radius: 4px;
+      width: 100%;
+      resize: none;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      outline: 0;
+
+      &:focus {
+        border: 1px solid rgba(0,128,255,.5);
+      }
+    }
+
+    .z-btn {
+      margin: auto;
+      display: block;
+    }
+  }
+}
 
 #header-holder {
   height: 59px;
@@ -165,24 +269,30 @@ export default {
         margin-left: 32px;
         padding-top: 3px;
 
-        .z-btn {
-          width: 80px;
+        .makefriends {
           height: 32px;
-          padding: 0;
+          padding: 0 5px;
           min-height: 0;
           min-width: 0;
           line-height: 30px;
           box-sizing: border-box;
           border-color: #50C87E;
-          color: #50C87E;
           border: 1px solid;
           border-radius: 4px;
           margin: 0;
           cursor: pointer;
           font-size: 14px;
-          background-color: transparent;
           -webkit-transition: background ease-out .1s;
           transition: background ease-out .1s;
+
+          background-color: #6861C0;
+          color: #fff;
+          font-weight: bold;
+
+          &:hover {
+            color: #6861C0;
+            background-color: #fff;
+          }
         }
       }
     }
@@ -232,7 +342,7 @@ export default {
       }
     }
 
-    .z-btn {
+    .login {
       float: right;
       margin: 13px 16px 0 6px;
       width: 72px;

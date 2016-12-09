@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="main receptacle column-followers-main">
 
+    <z-loading v-if="isShowLoading"></z-loading>
+
     <h2 class="page-title">{{total}} 人关注</h2>
 
     <div>
@@ -27,17 +29,22 @@
 </template>
 
 <script>
-import { zImageinput } from 'z-vue-components'
+import zLoading from './_zLoading.vue'
 
 export default {
   data() {
     return {
       items: [],
-      total: 0
+      total: 0,
+      isShowLoading: false
     };
+  },
+  components: {
+    zLoading
   },
   mounted() {
     this.$store.state.title = '关注者'
+    this.isShowLoading = true
     this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
       let data = res.data
       this.total = data.length
@@ -52,10 +59,9 @@ export default {
           profileUrl: item.profileUrl
         })
       }
+
+      this.isShowLoading = false
     })
-  },
-  components: {
-    zImageinput
   }
 };
 </script>
@@ -66,6 +72,8 @@ export default {
   padding-bottom: 16px;
   font-weight: 400;
   margin-bottom: 16px;
+  height: 50px;
+  line-height: 50px;
 }
 
 .column-followers-main {

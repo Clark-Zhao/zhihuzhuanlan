@@ -34,8 +34,6 @@
 <script>
 var md5 = require('js-md5');
 
-import { zButton} from 'z-vue-components'
-
 export default {
   data() {
     return {
@@ -48,9 +46,6 @@ export default {
         password: ''
       }
     };
-  },
-  components: {
-    zButton
   },
   methods: {
     login: function() {

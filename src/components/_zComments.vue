@@ -139,7 +139,7 @@ export default {
             comment_id: item._id,
             name: item.name,
             avatar: item.avatar || 'static/images/avatarholder.jpg',
-            createdTime: item.createdTime.replace('T', ' ').replace(/.[\d]{3}Z/,''),
+            createdTime: _utils.getLocalTime(item.createdTime),
             url: item.url,
             content: item.content,
             toName: item.toName,

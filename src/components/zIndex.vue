@@ -29,7 +29,7 @@
       </div>
 
       <div class="followers">
-        <router-link to="/followers">{{total}} 人关注</router-link>
+        <router-link to="/followers">{{followers}} 人关注</router-link>
       </div>
     </div>
 
@@ -72,9 +72,12 @@
         </li>
       </ul>
 
-      <div class="posts-end">
+      <div class="posts-end" v-show="(page === last_page) && !isShowLoading">
         <i class="icon iconfont icon-endstatus"></i>
       </div>
+
+      <z-loading v-show="isShowLoading"></z-loading>
+
     </div>
     <!-- 文章列表结束 -->
 
@@ -82,60 +85,75 @@
 </template>
 
 <script>
-import { zImageinput } from 'z-vue-components'
-import { zButton } from 'z-vue-components'
+import zLoading from './_zLoading.vue'
 
 export default {
   data() {
     return {
       items: [],
-      total: ''
+      followers: 0,
+      page: 1,
+      last_page: 1,
+      isShowLoading: false
     };
   },
   components: {
-    zImageinput,
-    zButton
+    zLoading
   },
   mounted() {
     this.getPostList()
     this.$store.state.title = "天道寺"
 
     this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
-      this.total = res.data.length
+      this.followers = res.data.length
+    })
+
+    const self = this
+    addEventListener('scroll', function() {
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      var offsetHeight = document.body.offsetHeight
+      var windowHeight = window.innerHeight;
+
+      if (((offsetHeight - windowHeight) - scrollTop <= 180) && (self.page < self.last_page) && (self.isShowLoading === false)) {
+        self.getPostList(++self.page)
+      }
     })
   },
   methods: {
     getPostList: function() {
-      this.$http.get(this.$store.state.apiBase +'posts').then((response) => {
+      this.isShowLoading = true
+
+      this.$http.get(this.$store.state.apiBase +'posts',
+      {
+        params: {
+          'page': this.page
+        }
+      }
+    ).then((response) => {
       // this.$http.get('static/api/posts.json').then((response) => {
         // success callback
         let data = response.data
-        for (var i = 0; i < data.length; i++) {
-          let item = data[i]
 
-          item.content = item.content.replace(/```js+/g, '').replace(/```+/g, '').replace(/\s+/g, '').substr(0, 88)
+        this.last_page = data.last_page
 
-          // 格式化时间
-          const publishedTime = new Date(item.publishedTime)
-          const year = publishedTime.getFullYear()
-          const month = ((publishedTime.getMonth() + 1) < 10) ? ('0' + (publishedTime.getMonth() + 1)) : (publishedTime.getMonth() + 1)
-          const date = (publishedTime.getDate() < 10) ? ('0' + publishedTime.getDate()) : publishedTime.getDate()
-          const hour = (publishedTime.getHours() < 10) ? ('0' + publishedTime.getHours()) : publishedTime.getHours()
-          const min = (publishedTime.getMinutes() < 10) ? ('0' + publishedTime.getMinutes()) : publishedTime.getMinutes()
-          const sec = (publishedTime.getSeconds() < 10) ? ('0' + publishedTime.getSeconds()) : publishedTime.getSeconds()
-          item.publishedTime = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec
+        for (var i = 0; i < data.list.length; i++) {
+          let item = data.list[i]
+
+          item.content = item.content.replace(/```js+/g, '').replace(/```css+/g, '').replace(/```scss+/g, '').replace(/```html+/g, '').replace(/```bash+/g, '').replace(/```+/g, '').replace(/\#+/g, '').replace(/\*+/g, '').replace(/(\!\[\]\().*?(\))/g,' ').replace(/\s+/g,' ')
 
           this.items.push({
             author: item.author,
-            publishedTime: item.publishedTime,
+            publishedTime: _utils.getLocalTime(item.publishedTime),
             tags: item.tags,
             title: item.title,
             titleImg: item.titleImg,
-            content: item.content,
+            content: _utils.getRealStr(item.content, 176),
             likesCount: item.likesCount,
             commentsCount: item.commentsCount,
             id: item._id
           })
+
+          this.isShowLoading = false
         }
       }, (response) => {
         // error callback

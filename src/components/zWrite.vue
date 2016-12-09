@@ -12,7 +12,7 @@
             <img v-show="titleImg != ''" class="preview" :src="titleImg"/>
             <i v-show="isShowLoading == false && titleImg == ''" class="icon iconfont icon-camera"></i>
             <input v-show="titleImg == ''" type="file" accept=".jpeg, .jpg, .png" name="upload_file" id="js-title-img-input" @change="uploadImage">
-            <span class="icon-loading-wraper"><i class="icon iconfont icon-loading" v-show="isShowLoading"></i></span>
+            <z-loading v-show="isShowLoading"></z-loading>
           </div>
           <!-- 题图编辑工具栏开始 -->
           <div class="img-edit-options" v-show="titleImg != ''">
@@ -69,6 +69,8 @@ var md = require('markdown-it')({
 
 import { zButton } from 'z-vue-components'
 import { zModal } from 'z-vue-components'
+
+import zLoading from './_zLoading.vue'
 
 export default {
   data() {
@@ -140,7 +142,7 @@ export default {
         document.getElementById('js-entry-content').innerText = ''
       }
       this.$http.post(
-        'http://localhost:3000/api/drafts/publish',
+        this.$store.state.apiBase + 'drafts/publish',
         {
           'title': this.title,
           'titleImg': this.titleImg,
@@ -156,7 +158,9 @@ export default {
   },
   components: {
     zButton,
-    zModal
+    zModal,
+
+    zLoading
   }
 };
 </script>
@@ -334,58 +338,7 @@ export default {
       color: rgba(0,0,0,.2);
       top: 12px;
     }
-
-    .icon-loading-wraper {
-      position: absolute;
-      z-index: 9999;
-      transform: translate(-12px, -12px);
-      top: 50%;
-      left: 50%;
-
-      &>.icon-loading {
-        color: #50C87E;
-        font-size: 24px;
-        display: inline-block;
-        -webkit-animation: spriteSpin .8s steps(12) infinite;
-        animation: spriteSpin .8s steps(12) infinite;
-      }
-    }
   }
-}
-@keyframes spriteSpin
-{
-0%   {transform:rotate(0deg);}
-25%  {transform:rotate(90deg);}
-50%  {transform:rotate(180deg);}
-75%  {transform:rotate(270deg);}
-100% {transform:rotate(360deg);}
-}
-
-@-moz-keyframes spriteSpin /* Firefox */
-{
-  0%   {transform:rotate(0deg);}
-  25%  {transform:rotate(90deg);}
-  50%  {transform:rotate(180deg);}
-  75%  {transform:rotate(270deg);}
-  100% {transform:rotate(360deg);}
-}
-
-@-webkit-keyframes spriteSpin /* Safari 和 Chrome */
-{
-  0%   {transform:rotate(0deg);}
-  25%  {transform:rotate(90deg);}
-  50%  {transform:rotate(180deg);}
-  75%  {transform:rotate(270deg);}
-  100% {transform:rotate(360deg);}
-}
-
-@-o-keyframes spriteSpin /* Opera */
-{
-  0%   {transform:rotate(0deg);}
-  25%  {transform:rotate(90deg);}
-  50%  {transform:rotate(180deg);}
-  75%  {transform:rotate(270deg);}
-  100% {transform:rotate(360deg);}
 }
 
 @media screen and (max-width: 660px) {
