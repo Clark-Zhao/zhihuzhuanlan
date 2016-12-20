@@ -24,7 +24,7 @@
             <use xlink:href="#icon-social-github"></use>
           </svg>
         </a>
-        <a>
+        <a href="static/images/weixin.jpg">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-social-wechat"></use>
           </svg>
