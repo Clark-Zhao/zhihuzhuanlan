@@ -43,7 +43,7 @@ export default {
     zLoading
   },
   mounted() {
-    this.$store.state.title = '关注者'
+    this.$store.commit('changeTitle', '关注者')
     this.isShowLoading = true
     this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
       let data = res.data

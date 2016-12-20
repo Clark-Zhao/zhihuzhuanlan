@@ -10,7 +10,7 @@
             <z-imageinput
             :width=38
             :height=38
-            :src="'static/images/avatar.jpg'"
+            :src="$store.state.authorAvatar"
             :alt="'作者头像'"
             :radius="'50%'"
             ></z-imageinput>

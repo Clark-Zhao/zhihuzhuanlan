@@ -62,7 +62,7 @@ export default {
           // 登录成功处理
           console.log(res.data.data.message);
           this.setCookie('token', res.data.data.token)
-          this.$store.state.auth = true
+          this.$store.commit('isLogin')
           this.$router.go(-1)
         }
       }, function(res) {

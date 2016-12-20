@@ -11,7 +11,7 @@
             <z-imageinput
             :width=36
             :height=36
-            :src="'static/images/avatar.jpg'"
+            :src="$store.state.authorAvatar"
             :alt="'作者头像'"
             :radius="'50%'"></z-imageinput>{{author}}
           </a>
@@ -100,7 +100,7 @@ export default {
         let data = response.data
 
         this.title = data.title
-        this.$store.state.title = this.title
+        this.$store.commit('changeTitle', this.title)
         this.titleImg = data.titleImg
         this.author = data.author
         this.publishedTime = _utils.getLocalTime(data.publishedTime)

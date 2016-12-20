@@ -30,19 +30,24 @@
         <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" placeholder="请输入标题" style="height: 46px;" v-model="title"></textarea>
       </div>
 
+      <textarea name="tags" rows="1" placeholder="标签" class="tags" v-model="tags"></textarea>
+
       <z-button
       :text="previewBtnText"
+      :type="'info'"
       @click.native="toggleViewableContainer"
       ></z-button>
 
       <z-button
+      class="publish"
       :text="'发布'"
+      :type="'success'"
       @click.native="publish"
       ></z-button>
 
     </section>
     <div class="editable-container" v-show="isShowEditableContainer">
-      <div id="js-entry-content" class="entry-content editable editable" name="content" contenteditable="true" holdertext="请输入正文" content-required="" ui-clean-paste="" ui-scraper="" ui-mention="" ui-editor="" editor-toolbar="js-editor-toolbar" word-min="2" g_editable="true" @focus="hideHolderText" @blur="showHolderText" @keyup="markdownIt"></div>
+      <div id="js-entry-content" class="entry-content editable editable" name="content" contenteditable="true" holdertext="请输入正文" content-required="" ui-clean-paste="" ui-scraper="" ui-mention="" ui-editor="" editor-toolbar="js-editor-toolbar" word-min="2" g_editable="true" @focus="hideHolderText" @blur="showHolderText" @keydown="cannotSave" @keyup="markdownIt"></div>
     </div>
     <div class="viewable-container" v-show="isShowViewableContainer">
       <div class="entry-content editable" name="content" v-html="content"></div>
@@ -75,8 +80,10 @@ import zLoading from './_zLoading.vue'
 export default {
   data() {
     return {
+      id: '',
       title: '',
       titleImg: '',
+      tags: '',
       content: '',
       previewBtnText: '点击预览',
       isImgUploadFail: false,
@@ -84,11 +91,26 @@ export default {
       isShowHolderText: true,
       isShowEditableContainer: true,
       isShowViewableContainer: false,
-      holderText: "<span class='holdertext' holdertext='1' contenteditable='false'>请输入正文</span>"
+      holderText: "<span class='holdertext' holdertext='1' contenteditable='false'>请输入正文</span>",
+      canSave: false,
+      timer: null
     };
   },
   mounted() {
     document.getElementById('js-entry-content').innerHTML = this.holderText
+
+    this.getDraft()
+  },
+  watch: {
+    'canSave': function(newVal, oldVal) {
+      let that = this
+      if (newVal === true) {
+        this.timer = setTimeout(that.saveDraft, 1000)
+      } else {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+    }
   },
   methods: {
     hideHolderText: function() {
@@ -103,6 +125,8 @@ export default {
     },
     markdownIt: function() {
       this.content = md.render(document.getElementById('js-entry-content').innerText)
+
+      this.canSave = true
     },
     uploadImage: function() {
       this.isShowLoading = true
@@ -144,8 +168,10 @@ export default {
       this.$http.post(
         this.$store.state.apiBase + 'drafts/publish',
         {
+          'id': this.id,
           'title': this.title,
           'titleImg': this.titleImg,
+          'tags': this.tags,
           'author': '天道',
           'content': document.getElementById('js-entry-content').innerText
         }
@@ -154,6 +180,49 @@ export default {
         }, function(res) {
 
         })
+    },
+    getDraft: function() {
+      this.$http.get(
+        this.$store.state.apiBase + 'get_draft'
+      ).then(function(res) {
+        const data = res.data
+        if (data.content) {
+          this.id = data._id
+          this.title = data.title
+          this.tags = data.tags
+          this.titleImg = data.titleImg
+          document.getElementById('js-entry-content').innerText = data.content
+        }
+      }, function(res) {
+
+      })
+    },
+    saveDraft: function() {
+      if (document.getElementById('js-entry-content').innerText != '请输入正文' && document.getElementById('js-entry-content').innerText.length > 2) {
+        this.$http.post(
+          this.$store.state.apiBase + 'save_draft',
+          {
+            'id': this.id,
+            'title': this.title,
+            'titleImg': this.titleImg,
+            'tags': this.tags,
+            'author': '天道',
+            'content': document.getElementById('js-entry-content').innerText
+          }
+        ).then(function(res) {
+          console.log("保存成功 " + new Date());
+          if (!this.id) {
+            this.id = res.data.id
+          }
+          }, function(res) {
+
+        })
+      }
+    },
+    cannotSave: function() {
+      this.canSave = false
+      clearTimeout(this.timer)
+      this.timer = null
     }
   },
   components: {
@@ -169,6 +238,18 @@ export default {
 .post-write {
   min-width: 660px;
   margin-top: 16px;
+
+  .publish {
+    float: right;
+  }
+
+  .tags {
+    width: 100%;
+    resize: none;
+    margin-bottom: 16px;
+    border: none;
+    padding: 5px;
+  }
 
   .title-input-container {
     margin: 16px 0;

@@ -3,7 +3,7 @@
     <div>
       <div class="avatar-link">
         <z-imageinput
-        :src="'static/images/avatar.jpg'"
+        :src="$store.state.authorAvatar"
         :width=100
         :height=100
         :alt="'作者头像'"
@@ -14,6 +14,21 @@
       <div class="title">天道寺</div>
 
       <div class="functions">
+        <a href="http://weibo.com/zhaoyuxiang">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-social-weibo"></use>
+          </svg>
+        </a>
+        <a href="https://github.com/Clark-Zhao">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-social-github"></use>
+          </svg>
+        </a>
+        <a>
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-social-wechat"></use>
+          </svg>
+        </a>
         <!-- <z-button
         :text="'成为友人'">
         </z-button> -->
@@ -102,7 +117,7 @@ export default {
   },
   mounted() {
     this.getPostList()
-    this.$store.state.title = "天道寺"
+    this.$store.commit('changeTitle', '博客 - 天道寺')
 
     this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
       this.followers = res.data.length
@@ -182,6 +197,16 @@ export default {
   text-align: center;
   position: relative;
   margin-bottom: 18px;
+
+  a {
+    display: inline-block;
+
+    .icon {
+      font-size: 36px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+  }
 
   .z-btn {
     border-color: #50C87E;

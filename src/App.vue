@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <z-progress ref="progress"></z-progress>
+    <z-backtop
+    :scroll-top="270"
+    ></z-backtop>
     <z-header></z-header>
     <main class="main-container">
       <router-view></router-view>
@@ -60,7 +63,7 @@ export default {
               this.$router.push('/login')
             }
           } else {
-            this.$store.state.auth = true
+            this.$store.commit('isLogin')
             console.log("已登录！");
           }
         }, function(res) {
@@ -148,6 +151,12 @@ export default {
     fill: currentColor;
     overflow: hidden;
   }
+  
+  .z-image-wraper {
+    img {
+      max-width: none;
+    }
+  }
 
   [class^=icon-], [class*=" icon-"] {
     speak: none;
@@ -200,6 +209,11 @@ export default {
         background: gray;
       }
     }
+  }
+
+  .z-backtop-wrapper.show-top {
+    right: 10px;
+    bottom: 20px;
   }
 }
 </style>
