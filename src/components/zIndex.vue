@@ -46,13 +46,19 @@
       <div class="followers">
         <router-link to="/followers">{{followers}} 人关注</router-link>
       </div>
+
+      <div class="tags">
+        <span class="tag" :class="{'current': !$route.query.tag}" @click="$router.push({ query: {}})"><b>全部</b>{{total}}</span>
+        <span class="tag" v-for="(tag, index) in tags" v-if="index < 3 || isShowAllTags === true" @click="$router.push({ query: { tag: tag.name }})" :class="{'current': $route.query.tag === tag.name}"><b>{{tag.name | capitalize}}</b>{{tag.postsCount}}</span>
+        <span class="more" @click="isShowAllTags = true" v-if="!isShowAllTags">更多</span>
+      </div>
     </div>
 
     <!-- 文章列表开始 -->
     <div class="items-container">
       <div class="block-title">
         <span>
-          <span>最新文章</span>
+          <span>{{ $route.query.tag ? $route.query.tag : '最新文章' | capitalize}}</span>
         </span>
       </div>
 
@@ -106,14 +112,24 @@ export default {
   data() {
     return {
       items: [],
+      tags: [],
       followers: 0,
       page: 1,
-      last_page: 1,
-      isShowLoading: false
+      last_page: 0,
+      total: 0,
+      isShowLoading: false,
+      isShowAllTags: false
     };
   },
   components: {
     zLoading
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    }
   },
   mounted() {
     this.getPostList()
@@ -123,16 +139,26 @@ export default {
       this.followers = res.data.length
     })
 
-    const self = this
+    this.$http.get(this.$store.state.apiBase +'get_post_tags').then((res) => {
+      this.tags = res.data
+    })
+
+    let self = this
     addEventListener('scroll', function() {
       var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       var offsetHeight = document.body.offsetHeight
       var windowHeight = window.innerHeight;
 
-      if (((offsetHeight - windowHeight) - scrollTop <= 180) && (self.page < self.last_page) && (self.isShowLoading === false)) {
+      if (((offsetHeight - windowHeight) - scrollTop <= 180) && (self.page < self.last_page) && (self.isShowLoading === false) && (self.$route.path == '/')) {
         self.getPostList(++self.page)
       }
     })
+  },
+  watch: {
+    '$route.query': function() {
+      this.items = []
+      this.getPostList()
+    }
   },
   methods: {
     getPostList: function() {
@@ -141,7 +167,8 @@ export default {
       this.$http.get(this.$store.state.apiBase +'posts',
       {
         params: {
-          'page': this.page
+          'page': this.page,
+          'tag': this.$route.query.tag
         }
       }
     ).then((response) => {
@@ -150,6 +177,7 @@ export default {
         let data = response.data
 
         this.last_page = data.last_page
+        this.total = data.total
 
         for (var i = 0; i < data.list.length; i++) {
           let item = data.list[i]
@@ -315,6 +343,43 @@ export default {
     &:hover {
       color: #333;
     }
+  }
+}
+
+.tags {
+  margin-bottom: 48px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: center;
+
+  .tag {
+    height: 30px;
+    padding: 0 15px;
+    color: #b3b3b3;
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,.1);
+    display: inline-block;
+    margin: 8px;
+    cursor: pointer;
+
+    b {
+      margin-right: 3px;
+      font-weight: 400;
+      color: gray;
+    }
+  }
+
+  .tag.current {
+    background: rgba(0,0,0,.06);
+    border-color: transparent;
+  }
+
+  .more {
+    padding: 0 10px;
+    color: gray;
+    display: inline-block;
+    margin: 8px;
+    cursor: pointer;
   }
 }
 

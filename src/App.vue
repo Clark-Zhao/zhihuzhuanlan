@@ -31,7 +31,6 @@ export default {
   watch: {
     '$route': function(to, from) {
       this.startProgress()
-      scrollTo(0,0)
 
       if (to.path == '/write' && this.$store.state.auth == false) {
         this.$router.push('/login')
@@ -151,7 +150,7 @@ export default {
     fill: currentColor;
     overflow: hidden;
   }
-  
+
   .z-image-wraper {
     img {
       max-width: none;
