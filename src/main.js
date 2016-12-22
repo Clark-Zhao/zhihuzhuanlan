@@ -9,6 +9,12 @@ import Utils from './utils.js'
 
 window._utils = Utils
 
+if (process.env.NODE_ENV === "production") {
+  window.__apiBase = 'http://59.111.101.254:3000/api/'
+} else {
+  window.__apiBase = 'http://192.168.10.50:3000/api/'
+}
+
 Vue.use(VueResource)
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -34,11 +40,8 @@ const router = new VueRouter({
 const store = new Vuex.Store({
   state: {
     auth: false,
-    urlBase: '192.168.10.50',
-    apiBase: 'http://59.111.101.254:3000/api/',  // 公网
-    // apiBase: 'http://10.173.32.5:3000/api/',  // 内网
-    // apiBase: 'http://192.168.10.50:3000/api/',
     title: '天道寺',
+    author: '天道',
     authorAvatar: 'https://ooo.0o0.ooo/2016/12/20/5858bbde6e8ac.jpg'
   },
   mutations: {

@@ -33,6 +33,16 @@ export default {
     }
 
     return arr.join('')
-  }
+  },
+
+  // 取cookie中的值
+  getCookie: function(key) {
+    var arr,reg = new RegExp("(^| )" + key + "=([^;]*)(;|$)");
+    if(arr = document.cookie.match(reg)) {
+      return unescape(arr[2]);
+    } else {
+      return null;
+    }
+  },
 
 };

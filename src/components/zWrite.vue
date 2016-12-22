@@ -30,7 +30,16 @@
         <textarea id="js-textarea" ui-textarea-autogrow="" required="" ng-model="draft.title" name="title" class="title" ui-placeholder="请输入标题" ui-tab-trigger="" autofocus="" word-min="2" word-max="50" placeholder="请输入标题" style="height: 46px;" v-model="title"></textarea>
       </div>
 
-      <textarea name="tags" rows="1" placeholder="标签" class="tags" v-model="tags"></textarea>
+      <div class="postTags-wrapper">
+        <z-button
+        v-for="postTag in postTags"
+        :text="postTag.name"
+        @click.native="tags = postTag.name"
+        class="postTag"
+        ></z-button>
+      </div>
+
+      <textarea name="tags" rows="1" placeholder="请选择标签" class="tags" v-model="tags"></textarea>
 
       <z-button
       :text="previewBtnText"
@@ -84,6 +93,7 @@ export default {
       title: '',
       titleImg: '',
       tags: '',
+      postTags: [],
       content: '',
       previewBtnText: '点击预览',
       isImgUploadFail: false,
@@ -100,6 +110,10 @@ export default {
     document.getElementById('js-entry-content').innerHTML = this.holderText
 
     this.getDraft()
+
+    this.$http.get(__apiBase +'get_post_tags').then((res) => {
+      this.postTags = res.data
+    })
   },
   watch: {
     'canSave': function(newVal, oldVal) {
@@ -162,17 +176,30 @@ export default {
       document.getElementById('js-title-img-input').value = ''
     },
     publish: function() {
-      if (document.getElementById('js-entry-content').innerText == '请输入正文') {
-        document.getElementById('js-entry-content').innerText = ''
+      if (!this.title) {
+        alert('请输入标题')
+        return false
       }
+
+      if (!this.tags) {
+        alert('请选择标签')
+        return false
+      }
+
+      if (document.getElementById('js-entry-content').innerText == '请输入正文' || document.getElementById('js-entry-content').innerText == '') {
+        alert('请输入正文')
+        return false
+      }
+
       this.$http.post(
-        this.$store.state.apiBase + 'drafts/publish',
+        __apiBase + 'drafts/publish',
         {
+          'token': _utils.getCookie('token'),
           'id': this.id,
           'title': this.title,
           'titleImg': this.titleImg,
           'tags': this.tags,
-          'author': '天道',
+          'author': this.$store.state.author,
           'content': document.getElementById('js-entry-content').innerText
         }
       ).then(function(res) {
@@ -183,7 +210,7 @@ export default {
     },
     getDraft: function() {
       this.$http.get(
-        this.$store.state.apiBase + 'get_draft'
+        __apiBase + 'get_draft'
       ).then(function(res) {
         const data = res.data
         if (data.content) {
@@ -200,13 +227,13 @@ export default {
     saveDraft: function() {
       if (document.getElementById('js-entry-content').innerText != '请输入正文' && document.getElementById('js-entry-content').innerText.length > 2) {
         this.$http.post(
-          this.$store.state.apiBase + 'save_draft',
+          __apiBase + 'save_draft',
           {
             'id': this.id,
             'title': this.title,
             'titleImg': this.titleImg,
             'tags': this.tags,
-            'author': '天道',
+            'author': this.$store.state.author,
             'content': document.getElementById('js-entry-content').innerText
           }
         ).then(function(res) {
@@ -241,6 +268,14 @@ export default {
 
   .publish {
     float: right;
+  }
+
+  .postTags-wrapper {
+    margin-bottom: 16px;
+
+    .postTag {
+      margin: 0 5px 10px;
+    }
   }
 
   .tags {

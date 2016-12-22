@@ -122,7 +122,7 @@ export default {
   methods: {
     getComments() {
       this.items = []
-      this.$http.get(this.$store.state.apiBase + 'comments',
+      this.$http.get(__apiBase + 'comments',
         {
           params: {
             'id': this.$route.params.id
@@ -169,7 +169,7 @@ export default {
         this.isAlertShow = true
       } else {
         this.commentContent = document.getElementById('comment').innerText
-        this.$http.post(this.$store.state.apiBase + 'comments',
+        this.$http.post(__apiBase + 'comments',
           {
             post_id: this.$route.params.id,
             name: this.commentName,
@@ -219,7 +219,7 @@ export default {
       this.commentToUrl = ''
     },
     like(comment_id, index) {
-      this.$http.get(this.$store.state.apiBase + 'comments/like',
+      this.$http.get(__apiBase + 'comments/like',
         {
           params: {
             'id': comment_id

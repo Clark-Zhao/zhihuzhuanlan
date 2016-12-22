@@ -45,7 +45,7 @@ export default {
   mounted() {
     this.$store.commit('changeTitle', '关注者')
     this.isShowLoading = true
-    this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
+    this.$http.get(__apiBase +'followers').then((res) => {
       let data = res.data
       this.total = data.length
       for (var i = 0; i < data.length; i++) {

@@ -90,7 +90,7 @@ export default {
     getPost: function() {
       this.isShowLoading = true;
 
-      this.$http.get(this.$store.state.apiBase + 'post',
+      this.$http.get(__apiBase + 'post',
         {
           params: {
             'id': this.$route.params.id
@@ -114,7 +114,7 @@ export default {
       });
     },
     like: function() {
-      this.$http.get(this.$store.state.apiBase + 'likes',
+      this.$http.get(__apiBase + 'likes',
         {
           params: {
             'id': this.$route.params.id

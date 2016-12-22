@@ -47,10 +47,10 @@ export default {
       this.$refs.progress.startProgress()
     },
     isLogin: function() {
-      this.$http.get(this.$store.state.apiBase +'islogin',
+      this.$http.get(__apiBase +'islogin',
         {
           params: {
-            token: this.getCookie('token')
+            token: _utils.getCookie('token')
           }
         }
       ).then(
@@ -69,17 +69,9 @@ export default {
 
       })
     },
-    getCookie: function(key) {
-      var arr,reg = new RegExp("(^| )" + key + "=([^;]*)(;|$)");
-      if(arr = document.cookie.match(reg)) {
-        return unescape(arr[2]);
-      } else {
-        return null;
-      }
-    },
     getIp: function() {
       this.$http.get(
-        this.$store.state.apiBase +'getip'
+        __apiBase +'getip'
       ).then(
         function(res) {
 

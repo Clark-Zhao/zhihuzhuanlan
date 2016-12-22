@@ -131,7 +131,7 @@ export default {
         return
       }
       this.$http.post(
-        this.$store.state.apiBase +'submitlink',
+        __apiBase +'submitlink',
         {
           'reviewUrl': this.reviewUrl,
           'name': this.name,

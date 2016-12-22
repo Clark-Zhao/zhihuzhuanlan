@@ -135,11 +135,11 @@ export default {
     this.getPostList()
     this.$store.commit('changeTitle', '博客 - 天道寺')
 
-    this.$http.get(this.$store.state.apiBase +'followers').then((res) => {
+    this.$http.get(__apiBase +'followers').then((res) => {
       this.followers = res.data.length
     })
 
-    this.$http.get(this.$store.state.apiBase +'get_post_tags').then((res) => {
+    this.$http.get(__apiBase +'get_post_tags').then((res) => {
       this.tags = res.data
     })
 
@@ -164,7 +164,7 @@ export default {
     getPostList: function() {
       this.isShowLoading = true
 
-      this.$http.get(this.$store.state.apiBase +'posts',
+      this.$http.get(__apiBase +'posts',
       {
         params: {
           'page': this.page,
