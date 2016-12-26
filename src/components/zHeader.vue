@@ -2,7 +2,7 @@
   <div id="header-holder" v-if="$route.path != '/login'">
     <header id="header" class="navbar" :class="{ 'navbar-fixed': isFixedNavbar, 'navbar-fixed-show': isShowNavbar}" :style="{'border-bottom-color': $route.path=='/followers' ? 'rgba(0, 0, 0, 0.08)' : ''}">
       <div class="navbar-logo-container">
-        <router-link to="/" class="logo icon-ic_zyx_logo" aria-label="首页">趙</router-link>
+        <a href="http://zhaoyuxiang.cn" class="logo icon-ic_zyx_logo" aria-label="首页" target="_blank">趙</a>
       </div>
       <div class="navbar-title-container clearfix anim" :class="{'show': scrollTop > 270 || $route.path != '/'}">
         <div class="img">
