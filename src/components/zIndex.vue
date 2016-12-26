@@ -7,7 +7,6 @@
         :width=100
         :height=100
         :alt="'作者头像'"
-        :radius="'50%'"
         ></z-imageinput>
       </div>
 
@@ -211,6 +210,10 @@ export default {
   width: 100px;
   height: 100px;
   margin: 0 auto 22px;
+
+  .z-image-wraper {
+    border-radius: 50%;
+  }
 }
 
 .title {

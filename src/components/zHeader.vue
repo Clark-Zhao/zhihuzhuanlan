@@ -12,7 +12,6 @@
             :height=38
             :src="$store.state.authorAvatar"
             :alt="'作者头像'"
-            :radius="'50%'"
             ></z-imageinput>
           </router-link>
         </div>
@@ -245,6 +244,7 @@ export default {
 
       .z-image-wraper {
         margin-right: 12px;
+        border-radius: 50%;
       }
 
       .titles.oneline {

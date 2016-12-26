@@ -12,8 +12,7 @@
             <z-imageinput
             :width=48
             :height=48
-            :src="item.avatar"
-            :radius="'20px'"></z-imageinput>
+            :src="item.avatar"></z-imageinput>
           </a>
           <div class="user-intro">
             <a :href="item.profileUrl" target="_blank">
@@ -92,6 +91,10 @@ export default {
 
       .user-avatar {
         float: left;
+
+        .z-image-wraper {
+          border-radius: 20px;
+        }
       }
 
       a {

@@ -12,8 +12,7 @@
             :width=36
             :height=36
             :src="$store.state.authorAvatar"
-            :alt="'作者头像'"
-            :radius="'50%'"></z-imageinput>{{author}}
+            :alt="'作者头像'"></z-imageinput>{{author}}
           </a>
           <span class="bull">·</span>
           <time>{{publishedTime}}</time>
@@ -169,6 +168,7 @@ export default {
       margin-right: 12px;
       margin-top: -4px;
       vertical-align: middle;
+      border-radius: 50%;
     }
 
     .bull {
