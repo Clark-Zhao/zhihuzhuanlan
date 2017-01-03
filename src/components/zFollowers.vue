@@ -8,7 +8,7 @@
     <div>
       <ul class="column-followers clearfix">
         <li class="ui-user-item" v-for="item in items">
-          <a class="user-avatar" :href="item.profileUrl">
+          <a class="user-avatar" :href="item.profileUrl" target="_blank">
             <z-imageinput
             :width=48
             :height=48
@@ -18,7 +18,7 @@
             <a :href="item.profileUrl" target="_blank">
               <strong>{{item.name}}</strong>
             </a>
-            <span class="bio">{{item.bio}}</span>
+            <span class="bio" :title="item.bio">{{item.bio}}</span>
           </div>
         </li>
       </ul>

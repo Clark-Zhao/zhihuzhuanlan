@@ -44,6 +44,8 @@
 
       <div class="followers">
         <router-link to="/followers">{{followers}} 人关注</router-link>
+        <!-- <br />
+        <span class="visitor-numbers">独立访客数: {{$store.state.visitorNumbers}}</span> -->
       </div>
 
       <div class="tags">
@@ -346,6 +348,12 @@ export default {
     &:hover {
       color: #333;
     }
+  }
+
+  .visitor-numbers {
+    color: gray;
+    display: inline-block;
+    margin-top: 10px;
   }
 }
 

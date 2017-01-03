@@ -61,7 +61,7 @@ export default {
         } else {
           // 登录成功处理
           console.log(res.data.data.message);
-          this.setCookie('token', res.data.data.token)
+          _utils.setCookie('token', res.data.data.token)
           this.$store.commit('isLogin')
           this.$router.go(-1)
         }
@@ -85,12 +85,6 @@ export default {
       }, function(res) {
         console.log(res);
       })
-    },
-    setCookie: function(key, value) {
-      var Days = 30;
-      var exp = new Date();
-      exp.setTime(exp.getTime() + Days*24*60*60*1000);
-      document.cookie = key + "="+  escape(value) + ";expires=" + exp.toGMTString();
     }
   }
 };

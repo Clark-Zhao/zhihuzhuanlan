@@ -42,7 +42,8 @@ const store = new Vuex.Store({
     auth: false,
     title: '天道寺',
     author: '天道',
-    authorAvatar: 'https://ooo.0o0.ooo/2016/12/20/5858bbde6e8ac.jpg'
+    authorAvatar: 'https://ooo.0o0.ooo/2016/12/20/5858bbde6e8ac.jpg',
+    visitorNumbers: 0
   },
   mutations: {
     // 用户已登录
@@ -52,6 +53,22 @@ const store = new Vuex.Store({
     // 改变标题
     changeTitle (state, title) {
       state.title = title
+    },
+    // 得到独立访客数
+    getVisitorNumbers (state, visitorNumbers) {
+      state.visitorNumbers = visitorNumbers
+    }
+  },
+  actions: {
+    getVisitorNumbers ({ commit, state }) {
+      Vue.http.get(
+        __apiBase +'getip'
+      ).then(
+        function(res) {
+          commit('getVisitorNumbers', res.data.data.visitor_numbers)
+        }, function(res) {
+
+      })
     }
   }
 })

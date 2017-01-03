@@ -26,7 +26,7 @@ export default {
   mounted() {
     this.startProgress()
     this.isLogin()
-    this.getIp()
+    this.$store.dispatch('getVisitorNumbers')
   },
   watch: {
     '$route': function(to, from) {
@@ -65,16 +65,6 @@ export default {
             this.$store.commit('isLogin')
             console.log("已登录！");
           }
-        }, function(res) {
-
-      })
-    },
-    getIp: function() {
-      this.$http.get(
-        __apiBase +'getip'
-      ).then(
-        function(res) {
-
         }, function(res) {
 
       })
