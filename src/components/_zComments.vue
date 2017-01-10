@@ -39,12 +39,11 @@
         <ul class="comment-list">
           <li class="comment-item" v-for="(item, index) in items">
             <div class="comment-item-inner-normal">
-              <!-- <a :href="item.url" class="avatar-link" target="_blank" v-if="item.url != ''">
+              <a :href="item.url" class="avatar-link" target="_blank" v-if="item.url != ''">
                 <z-imageinput
                 :height=36
                 :width=36
                 :src="item.avatar"
-                :radius="'50%'"
                 ></z-imageinput>
               </a>
               <a class="avatar-link" v-else>
@@ -52,9 +51,8 @@
                 :height=36
                 :width=36
                 :src="item.avatar"
-                :radius="'50%'"
                 ></z-imageinput>
-              </a> -->
+              </a>
               <div class="comment-body">
                 <div class="comment-hd">
                   <a class="link" :href="item.url" target="_blank" v-if="item.url != 'http://'">{{item.name}}</a>
@@ -138,7 +136,7 @@ export default {
           this.items.push({
             comment_id: item._id,
             name: item.name,
-            avatar: item.avatar || 'static/images/avatarholder.jpg',
+            avatar: 'https://cdn.v2ex.com/gravatar/' + item.email,
             createdTime: _utils.getLocalTime(item.createdTime),
             url: item.url,
             content: item.content,
@@ -345,6 +343,10 @@ export default {
 
       .avatar-link {
         float: left;
+
+        .z-image-wraper {
+          border-radius: 50%;
+        }
       }
 
       a.link {
@@ -358,7 +360,6 @@ export default {
 
       .comment-body {
         margin: 0 0 0 60px; //显示头像用
-        margin: 0px;
       }
 
       .comment-hd, .comment-ft {
@@ -441,6 +442,10 @@ export default {
           i {
             display: none;
           }
+        }
+
+        .comment-body {
+          margin-left: 50px;
         }
       }
     }

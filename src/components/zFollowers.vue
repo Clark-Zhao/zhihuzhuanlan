@@ -51,7 +51,7 @@ export default {
         let item = data[i]
 
         this.items.push({
-          avatar: item.avatar || 'static/images/avatarholder.jpg',
+          avatar: item.avatar || 'https://cdn.v2ex.com/gravatar/',
           bio: item.bio,
           description: item.description,
           name: item.name,

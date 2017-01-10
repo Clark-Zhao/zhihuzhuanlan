@@ -13,17 +13,17 @@
       <div class="title">天道寺</div>
 
       <div class="functions">
-        <a href="http://weibo.com/zhaoyuxiang">
+        <a href="http://weibo.com/zhaoyuxiang" target="_blank">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-social-weibo"></use>
           </svg>
         </a>
-        <a href="https://github.com/Clark-Zhao">
+        <a href="https://github.com/Clark-Zhao" target="_blank">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-social-github"></use>
           </svg>
         </a>
-        <a href="static/images/weixin.jpg">
+        <a href="static/images/weixin.jpg" target="_blank">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-social-wechat"></use>
           </svg>
