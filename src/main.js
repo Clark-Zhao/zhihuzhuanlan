@@ -10,7 +10,7 @@ import Utils from './utils.js'
 window._utils = Utils
 
 if (process.env.NODE_ENV === "production") {
-  window.__apiBase = 'http://api.zhaoyuxiang.cn/v1/'
+  window.__apiBase = 'https://api.zhaoyuxiang.cn/v1/'
 } else {
   window.__apiBase = 'http://localhost:3000/v1/'
 }

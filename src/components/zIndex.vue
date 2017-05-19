@@ -18,7 +18,7 @@
             <use xlink:href="#icon-social-weibo"></use>
           </svg>
         </a>
-        <a href="https://github.com/Clark-Zhao" target="_blank">
+        <a href="https://github.com/LLawlight" target="_blank">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-social-github"></use>
           </svg>
